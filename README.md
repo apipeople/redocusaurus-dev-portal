@@ -1,3 +1,30 @@
+# API People Redocusaurs Usage
+
+This project was edited to dinamically download and generate the documentation directly from API People's SwaggerHub
+
+## Build steps
+
+1. Select API to be generated in SwaggerHub
+2. Get the URL resource download from SwaggerHub: 
+   > Example: if the url of the API is https://app.swaggerhub.com/apis/apipeople/sunwst-data-sync-extract-app/1.0.0
+   > then copy /sunwst-data-sync-extract-app/1.0.0 resource and use it later
+3. Get you API Key from swaggerhub account
+    > Should be at https://app.swaggerhub.com/settings/apiKey
+4. Build the application:
+    ```shell
+      npm run build --name={defineApiName} --url={copied resource from step 2} --apiKey={your apiKey from swaggerhub}
+    ```
+5. Serve the application
+    ```shell
+      npm run serve
+    ```
+
+ ###### Optionally, steps 4 and 5 can be merged with the command:
+ ```shell
+  npm run build --name={defineApiName} --url={copied resource from step 2} --apiKey={your apiKey from swaggerhub} && npm run serve
+ ```
+
+
 # Redocusaurus
 
 [![npm](https://img.shields.io/npm/v/redocusaurus)](https://www.npmjs.com/package/redocusaurus/)
