@@ -139,4 +139,4 @@ static/openapi
 .pnp.*
 
 website/version.json
-website/openapi/swagger/openapi.json
+website/openapi/swagger/swagger.json

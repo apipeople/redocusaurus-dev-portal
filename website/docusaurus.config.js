@@ -13,7 +13,7 @@ const redocusaurus = [
     specs: [
       {
         id: 'api-documentation',
-        spec: 'openapi/swagger/openapi.json',
+        spec: 'openapi/swagger/swagger.json',
         route: '/documentation/api/',
       },
     ],

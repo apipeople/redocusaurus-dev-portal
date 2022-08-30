@@ -6,7 +6,7 @@ const propertiesArray = [];
 
 const writeJsonFile = (str, name) => {
     fs.mkdir(`website/openapi/swagger/`, { recursive: true }, (err) => console.error(err));
-    let file = fs.createWriteStream(`website/openapi/swagger/openapi.json`)
+    let file = fs.createWriteStream(`website/openapi/swagger/swagger.json`)
         .on('finish', () => file.close());
     file.write(str);
     console.log('Finished downloading API documentation.');
