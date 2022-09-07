@@ -1,43 +1,84 @@
 /**
  * @type {import('redocusaurus').PresetEntry}
  */
+const lightCodeTheme = require("prism-react-renderer/themes/github");
+const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const projectName = process.env.npm_config_name;
+const dotenv = require('dotenv');
+dotenv.config();
+
+const generateSpecs = () => {
+  let specs = [
+      {
+      id: 'api-documentation',
+      spec: 'openapi/swagger/swagger.json',
+      route: '/documentation/api/',
+    }
+  ]
+  let jsonString = process.env.API_LIST || '[]';
+  let apis = JSON.parse(jsonString);
+  apis.forEach(api => {
+    let id = api.url.split('/')[1];
+    let spec = {
+      id: id,
+      spec: `openapi/swagger/${id}.json`,
+      route: `/documentation/api/${id}`,
+    }
+    specs.push(spec);
+  });
+  return specs;
+}
+
+const generateItems = () => {
+  let items = [
+    {
+      type: 'doc',
+      docId: 'mulesoft/introduction',
+      position: 'left',
+      label: 'MuleSoft',
+    },
+    {
+      type: 'doc',
+      docId: 'bankcores/introduction',
+      position: 'left',
+      label: 'Banking Cores',
+    },
+    {
+      type: 'doc',
+      docId: 'devops/introduction',
+      position: 'left',
+      label: 'DevOps',
+    },
+    {
+      href: "https://www.linkedin.com/company/api-people",
+      label: "LinkedIn",
+      position: "right",
+    },
+  ];
+  let subItems = [];
+  let jsonString = process.env.API_LIST || '[]';
+  let apis = JSON.parse(jsonString);
+  apis.forEach(api => {
+    let id = api.url.split('/')[1];
+    let item = {
+      label: api.name,
+      to: `/documentation/api/${id}`,
+    }
+    subItems.push(item);
+  });
+  items.push({
+    label: 'Documentations',
+    position: 'left',
+    items: subItems
+  });
+  return items;
+}
+
 const redocusaurus = [
   'redocusaurus',
   {
     debug: Boolean(process.env.DEBUG || process.env.CI),
-    specs: [
-      {
-        id: 'using-single-yaml',
-        spec: 'openapi/single-file/openapi.yaml',
-        route: '/examples/using-single-yaml/',
-      },
-      {
-        id: 'using-multi-file-yaml',
-        spec: 'openapi/multi-file/openapi.yaml',
-        route: '/examples/using-multi-file-yaml/',
-      },
-      {
-        id: 'using-swagger-json',
-        spec: 'openapi/swagger/swagger.json',
-        route: '/examples/using-swagger-json/',
-      },
-      {
-        id: 'using-remote-url',
-        // Remote File
-        spec: 'https://redocly.github.io/redoc/openapi.yaml',
-        route: '/examples/using-remote-url/',
-      },
-      {
-        id: 'using-custom-page',
-        spec: 'openapi/single-file/openapi.yaml',
-        // NOTE: no `route` passed, instead data used in custom React Component ('custom-page/index.jsx')
-      },
-      {
-        id: 'using-custom-layout',
-        spec: 'openapi/single-file/openapi.yaml',
-        // NOTE: no `route` passed, instead data used in custom React Component ('custom-layout/index.jsx')
-      },
-    ],
+    specs: generateSpecs(),
     theme: {
       /**
        * Highlight color for docs
@@ -65,6 +106,14 @@ if (process.env.VERCEL_URL) {
  * @type {Partial<import('@docusaurus/types').DocusaurusConfig>}
  */
 const config = {
+  title: "API People",
+  tagline: "Internal Company Documentation",
+  baseUrl: "/",
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
+  favicon: "img/apipeople/favicon.ico",
+  organizationName: "apipeople", // Usually your GitHub org/user name.
+  projectName: projectName, 
   presets: [
     /** ************ Your other presets' config  *********** */
     [
@@ -72,133 +121,64 @@ const config = {
       {
         debug: Boolean(process.env.DEBUG || process.env.CI),
         theme: { customCss: [require.resolve('./src/custom.css')] },
-        docs: {
-          routeBasePath: '/docs',
-          editUrl: 'https://github.com/rohit-gohri/redocusaurus/edit/main/website/',
-        },
       },  
     ],
     // Redocusaurus Config
     redocusaurus,
   ],
-  title: 'Redocusaurus',
-  tagline: 'OpenAPI solution for Docusaurus docs with Redoc',
   customFields: {
     meta: {
       description: 'Integrate Redoc easily into your Docusaurus Site',
     },
   },
-  url: process.env.DEPLOY_PRIME_URL || 'http://localhost:5000', // Your website URL
-  baseUrl: process.env.DEPLOY_BASE_URL || '/', // Base URL for your project */
+  url: 'http://localhost:3000', // Your website URL
+  baseUrl: '/', // Base URL for your project */
   favicon: 'img/favicon.ico',
   themeConfig: {
     navbar: {
-      title: 'Redocusaurus',
-      items: [
-        {
-          label: 'Docs',
-          position: 'left',
-          to: '/docs',
-        },
-        {
-          label: 'Examples',
-          position: 'left',
-          items: [
-            {
-              label: 'All',
-              to: '/examples',
-            },
-            {
-              label: 'Using Single YAML',
-              to: '/examples/using-single-yaml/',
-            },
-            {
-              label: 'Using Remote URL',
-              to: '/examples/using-remote-url/',
-            },
-            {
-              label: 'Using Multiple YAMLs',
-              to: '/examples/using-multi-file-yaml/',
-            },
-            {
-              label: 'Using Swagger',
-              to: '/examples/using-swagger-json/',
-            },
-            {
-              label: 'Custom Page',
-              to: '/examples/custom-page/',
-            },
-            {
-              label: 'Custom Layout',
-              to: '/examples/custom-layout/',
-            },
-          ],
-        },
-        {
-          label: 'v1',
-          position: 'right',
-          items: [
-            {
-              label: 'v0',
-              href: 'https://redocusaurus-v0.vercel.app/',
-            },
-            {
-              label: 'v1',
-              href: 'https://redocusaurus.vercel.app',
-            },
-          ],
-        },
-        {
-          href: 'https://github.com/rohit-gohri/redocusaurus',
-          position: 'right',
-          className: 'header-github-logo',
-          'aria-label': 'GitHub Repo',
-        },
-      ],
+      title: 'API People',
+      logo: {
+        alt: 'API People',
+        src: 'img/apipeople/small-logo.png',
+        srcDark: "img/apipeople/small-logo-white.png"
+      },
+      items: generateItems(),
     },
     footer: {
-      // logo: {
-      //   alt: 'Redocusaurus Logo',
-      //   src: 'img/logoDark.png',
-      // },
-      style: 'dark',
-      links: [
-        {
-          title: 'NPM Modules',
-          items: [
-            {
-              label: 'Redocusaurus',
-              href: 'https://www.npmjs.com/package/redocusaurus/',
-            },
-            {
-              label: 'Docusaurus Theme Redoc',
-              href: 'https://www.npmjs.com/package/docusaurus-theme-redoc/',
-            },
-            {
-              label: 'Docusaurus Plugin Redoc',
-              href: 'https://www.npmjs.com/package/docusaurus-plugin-redoc/',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Github',
-              href: 'https://github.com/rohit-gohri/redocusaurus/',
-            },
-            {
-              label: 'Blog Post',
-              href: 'https://rohit.page/blog/projects/openapi-for-docusaurus/',
-            },
-            {
-              label: 'Twitter Discussion',
-              href: 'https://twitter.com/rohit_gohri/status/1351589213565644801',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://rohit.page" target="_blank" rel="noopener noreferrer">Rohit Gohri</a>. Built with <a href="https://github.com/facebook/docusaurus" target="_blank" rel="noopener noreferrer">Docusaurus</a>`,
+      style: "dark",
+        links: [
+          {
+            title: "Community",
+            items: [
+              {
+                label: "Stack Overflow",
+                href: "https://stackoverflow.com/questions/tagged/docusaurus",
+              },
+              {
+                label: "Discord",
+                href: "https://discordapp.com/invite/docusaurus",
+              },
+              {
+                label: "Twitter",
+                href: "https://twitter.com/docusaurus",
+              },
+            ],
+          },
+          {
+            title: "More",
+            items: [
+              {
+                label: "GitHub",
+                href: "https://github.com/facebook/docusaurus",
+              },
+            ],
+          },
+        ],
+        copyright: `Copyright © ${new Date().getFullYear()} API People LLC, Built with Docusaurus.`,
+      },
+      prism: {
+        theme: lightCodeTheme,
+        darkTheme: darkCodeTheme,
     },
   },
 };

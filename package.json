@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Redoc for DocusaurusV2",
   "scripts": {
-    "build": "yarn build:packages && yarn build:website",
+    "build": "node create-swaggerhub-api.ts && yarn build:packages && yarn build:website",
     "build:packages": "yarn workspaces foreach --exclude redocusaurus-website --exclude redocusaurus-monorepo -tpv run build",
     "build:website": "yarn workspace redocusaurus exec 'echo \\\"$npm_package_version\\\" > $PROJECT_CWD/website/version.json' && yarn workspace redocusaurus-website run build",
     "clean": "yarn workspaces foreach --exclude redocusaurus-monorepo -Atv exec \"rm -rf build .docusaurus dist dist-jsx .tsbuild.info .tsbuild.jsx.info\"",
@@ -79,5 +79,8 @@
     "printWidth": 80,
     "tabWidth": 2
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.2.1",
+  "dependencies": {
+    "redocusaurus": "workspace:^"
+  }
 }

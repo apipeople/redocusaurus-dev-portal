@@ -4,6 +4,9 @@ import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import clsx from 'clsx';
 import styles from './styles.module.css';
+import HomepageFeatures from '../components/HomepageFeatures';
+
+const projectName = process.env.npm_config_name;
 
 const sections = [
   {
@@ -26,19 +29,7 @@ const sections = [
     description: (
       <>Use individual schema definitions directly in your MDX docs</>
     ),
-  },
-  {
-    title: <>⚡️ Blazing Fast</>,
-    description: (
-      <>
-        Support for
-        <a href="/docs/guides/build-time-rendering">
-          {' '}
-          Build Time Rendering!
-        </a>
-      </>
-    ),
-  },
+  }
 ];
 
 /**
@@ -62,33 +53,16 @@ function Section({ title, description, link }) {
 
 function Docs() {
   return (
-    <Layout title="Redocusaurus" description="OpenAPI documentation solution">
+    <Layout title="API People" description="OpenAPI documentation solution">
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
+        <title>API People</title>
         <div className="container">
-          <h1 className="hero__title">Redocusaurus</h1>
-          <p>OpenAPI solution for Docusaurus docs using Redoc</p>
-          <span>
-            <iframe
-              src="https://ghbtns.com/github-btn.html?user=rohit-gohri&amp;repo=redocusaurus&amp;type=star&amp;count=true&amp;size=large"
-              width={160}
-              height={30}
-              title="GitHub Stars"
-            />
-          </span>
+          <h1 className="hero__title">API People</h1>
+          <p>Expert Systems Integration Services in MuleSoft, Apache Camel and Java/Spring.</p>
         </div>
       </header>
       <main>
-        {sections && sections.length > 0 && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {sections.map((props, idx) => (
-                  <Section key={idx} {...props} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        <HomepageFeatures />
       </main>
     </Layout>
   );
