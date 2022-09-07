@@ -1,12 +1,14 @@
 const {exec} = require('child_process');
 const https = require('node:https');
 const fs = require('fs');
+const dotenv = require('dotenv');
+dotenv.config({path:'./website/.env'});
 
 const propertiesArray = [];
 
 const writeJsonFile = (str, name) => {
     fs.mkdir(`website/openapi/swagger/`, { recursive: true }, (err) => console.error(err));
-    let file = fs.createWriteStream(`website/openapi/swagger/swagger.json`)
+    let file = fs.createWriteStream(`website/openapi/swagger/${name}.json`)
         .on('finish', () => file.close());
     file.write(str);
     console.log('Finished downloading API documentation.');
@@ -30,19 +32,19 @@ const generateFileFromSwaggerhub = (name, url, apiKey) => {
 }
 
 function init() {
-    let name = process.env.npm_config_name;
-    let url = process.env.npm_config_url;
-    let apiKey = process.env.npm_config_apikey;
+    let apiKey = process.env.API_KEY;
     console.log(`apiKey ${apiKey}`);
-    
-    if (name == null || url == null || apiKey == null) {
-        console.error('Name, URL and apiKey are required. Please, use --name and --url and --apikey arguments.');
+    let jsonString = process.env.API_LIST || '[]';
+    let apis = JSON.parse(jsonString);
+    console.log('APIs found: ' + apis.length);
+    if (apis.length == 0 || apiKey == null) {
+        console.error('APIs and apiKey are required');
         return;
     }
-    console.log('Started downloading API documentation to openapi.json file.');
-    generateFileFromSwaggerhub(name, url, apiKey)
-
-    console.log(`Waiting for directory creation: ${name}`);
+    apis.forEach(api => {
+        let id = api.url.split('/')[1];
+        generateFileFromSwaggerhub(id, api.url, apiKey)
+    });
 }
 
-init();
+init()

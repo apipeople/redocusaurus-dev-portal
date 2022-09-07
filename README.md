@@ -10,18 +10,23 @@ This project was edited to dinamically download and generate the documentation d
    > then copy /sunwst-data-sync-extract-app/1.0.0 resource and use it later
 3. Get you API Key from swaggerhub account
     > Should be at https://app.swaggerhub.com/settings/apiKey
-4. Build the application:
+4. Set the API_KEY enviroment variable with your swaggerhub key
+5. Set the API_LIST enviroment variable containing a list of the names and url to be generated
     ```shell
-      npm run build --name={defineApiName} --url={copied resource from step 2} --apiKey={your apiKey from swaggerhub}
+      export API_LIST=[{"name": "Creditnap System API v1.0.0", "url": "/creditsnap-sys-api/1.0.0"},{"name": "Sunwest Data Sync Process API", "url":"/sunwst-data-sync-process-app/1.0.0"}]
     ```
-5. Serve the application
+6. Build the application:
+    ```shell
+      npm run build
+    ```
+7. Serve the application
     ```shell
       npm run serve
     ```
 
  ###### Optionally, steps 4 and 5 can be merged with the command:
  ```shell
-  npm run build --name={defineApiName} --url={copied resource from step 2} --apiKey={your apiKey from swaggerhub} && npm run serve
+  npm run build && npm run serve
  ```
 
 

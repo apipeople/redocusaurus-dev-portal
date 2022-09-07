@@ -1,22 +1,84 @@
 /**
  * @type {import('redocusaurus').PresetEntry}
  */
+const lightCodeTheme = require("prism-react-renderer/themes/github");
+const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const projectName = process.env.npm_config_name;
+const dotenv = require('dotenv');
+dotenv.config();
 
- const lightCodeTheme = require("prism-react-renderer/themes/github");
- const darkCodeTheme = require("prism-react-renderer/themes/dracula");
- const projectName = process.env.npm_config_name;
+const generateSpecs = () => {
+  let specs = [
+      {
+      id: 'api-documentation',
+      spec: 'openapi/swagger/swagger.json',
+      route: '/documentation/api/',
+    }
+  ]
+  let jsonString = process.env.API_LIST || '[]';
+  let apis = JSON.parse(jsonString);
+  apis.forEach(api => {
+    let id = api.url.split('/')[1];
+    let spec = {
+      id: id,
+      spec: `openapi/swagger/${id}.json`,
+      route: `/documentation/api/${id}`,
+    }
+    specs.push(spec);
+  });
+  return specs;
+}
+
+const generateItems = () => {
+  let items = [
+    {
+      type: 'doc',
+      docId: 'mulesoft/introduction',
+      position: 'left',
+      label: 'MuleSoft',
+    },
+    {
+      type: 'doc',
+      docId: 'bankcores/introduction',
+      position: 'left',
+      label: 'Banking Cores',
+    },
+    {
+      type: 'doc',
+      docId: 'devops/introduction',
+      position: 'left',
+      label: 'DevOps',
+    },
+    {
+      href: "https://www.linkedin.com/company/api-people",
+      label: "LinkedIn",
+      position: "right",
+    },
+  ];
+  let subItems = [];
+  let jsonString = process.env.API_LIST || '[]';
+  let apis = JSON.parse(jsonString);
+  apis.forEach(api => {
+    let id = api.url.split('/')[1];
+    let item = {
+      label: api.name,
+      to: `/documentation/api/${id}`,
+    }
+    subItems.push(item);
+  });
+  items.push({
+    label: 'Documentations',
+    position: 'left',
+    items: subItems
+  });
+  return items;
+}
 
 const redocusaurus = [
   'redocusaurus',
   {
     debug: Boolean(process.env.DEBUG || process.env.CI),
-    specs: [
-      {
-        id: 'api-documentation',
-        spec: 'openapi/swagger/swagger.json',
-        route: '/documentation/api/',
-      },
-    ],
+    specs: generateSpecs(),
     theme: {
       /**
        * Highlight color for docs
@@ -80,18 +142,7 @@ const config = {
         src: 'img/apipeople/small-logo.png',
         srcDark: "img/apipeople/small-logo-white.png"
       },
-      items: [
-        {
-          label: 'API Documentation',
-          position: 'left',
-          to: '/documentation/api',
-        },
-        {
-          href: "https://www.linkedin.com/company/api-people",
-          label: "LinkedIn",
-          position: "right",
-        },
-      ],
+      items: generateItems(),
     },
     footer: {
       style: "dark",

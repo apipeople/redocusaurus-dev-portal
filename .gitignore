@@ -140,3 +140,4 @@ static/openapi
 
 website/version.json
 website/openapi/swagger/swagger.json
+website/openapi/swagger/*.json
